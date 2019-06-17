@@ -1,0 +1,163 @@
+<!DOCTYPE html>  <!-- HTML5 document type -->
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel='stylesheet' href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="js/go_pack.js"></script>
+    <script src='js/FreehandDrawingTool.js'></script>
+    <script src='js/jquery.min.js'></script>
+    <script src='js/jquery-ui.min.js'></script>
+    <script src="js/hockey.js"></script>
+  </head>
+  
+  <body>
+    
+      <div id='dialog' class='modal' style='height:250px;'>
+          <div class='row' style='overflow: auto; height:250px' id='dlg_table'>
+          </div>
+      </div>
+
+      <div class="row menu_div" style='text-align: right'>
+          <div class="col-3">
+              <img src="images/logo_text.png" style="width:200px;">
+          </div>
+          <div class='col-8'>
+              <a class='menu_a'>FOOTBALL</a>
+              <a class='menu_a'>HANDBALL</a>
+              <a class='menu_a'>ICE-HOKEY</a>
+          </div>
+      </div>
+
+      <div class="row toolbar_div">
+        <button id="SaveButton" onclick="refresh()">New</button>
+        <button id="SaveButton" onclick="save()">Save</button>
+        <button id="SavePngButton" onclick="save_png()">Save as png</button>
+        <button onclick="load()">Load</button>
+        <button onclick="load_png()">Load PNG</button>
+        <button id="SaveButton" onclick="undo()">Undo</button>
+        <button id="SaveButton" onclick="redo()">Redo</button>
+        <button id="DeleteButton" onclick="delete_()">Delete</button>
+        <button title='Change Object Color' onclick="changeColor('rgb(0, 0, 0)', 1)" style="background: rgb(0, 0, 0); width: 30px">&nbsp;</button>
+        <button title='Change Object Color' onclick="changeColor('rgb(251, 151, 0)', 2)" style="background: rgb(251, 151, 0); width: 30px">&nbsp;</button>
+        <button title='Change Object Color' onclick="changeColor('rgb(148, 122, 55)', 3)" style="background: rgb(148, 122, 55); width: 30px">&nbsp;</button>
+        <button title='Change Object Color' onclick="changeColor('rgb(250, 250, 250)', 4)" style="background: rgb(250, 250, 250); width: 30px">&nbsp;</button>
+        <button title='Change Object Color' onclick="changeColor('rgb(250, 0, 0)', 5)" style="background: rgb(250, 0, 0); width: 30px">&nbsp;</button>
+        <button title='Change Object Color' onclick="changeColor('rgb(0, 0, 250)', 6)" style="background: rgb(0, 0, 250); width: 30px">&nbsp;</button>
+
+        <button title='Player Number' onclick="changePlayerNumber('')"  class='player_number'>&nbsp;</button>
+        <button title='Player Number' onclick="changePlayerNumber('1')" class='player_number'>1</button>
+        <button title='Player Number' onclick="changePlayerNumber('2')" class='player_number'>2</button>
+        <button title='Player Number' onclick="changePlayerNumber('3')" class='player_number'>3</button>
+        <button title='Player Number' onclick="changePlayerNumber('4')" class='player_number'>4</button>
+        <button title='Player Number' onclick="changePlayerNumber('5')" class='player_number'>5</button>
+        <button title='Player Number' onclick="changePlayerNumber('6')" class='player_number'>6</button>
+
+        <input type="checkbox" name="ch_head" id="ch_head" value="1" onchange='changeArrowHeader()'> <label for='ch_head'>Arrow Head</label>
+        <input type='checkbox' name='ch_toggle' id='ch_toggle' value='1' onchange="changeToggle()"><label for='ch_toggle'>Scroll Background</label>
+      </div>
+
+      <div class="pattern_div" id='pattern_div'>
+        <details>
+          <summary>Playgrounds</summary>
+          <img src="images/Icehockey/playground1.jpg" class="back_img" title="Playground 1" onclick="updateBackgroundImage(1)">
+          <img src="images/Icehockey/playground2.jpg" class="back_img" title="Playground 2" onclick="updateBackgroundImage(2)">
+        </details>
+      
+        <details>
+            <summary>Players</summary>
+            <div class='row'>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,X,'><label>X</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,O,'><label>O</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,F,'><label>F</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,D,'><label>D</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,C,'><label>C</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,G,'><label>G</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,LW,'><label>LW</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,RW,'><label>RW</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,LD,'><label>LD</label></div>
+              <div draggable="true" title='Player' class='col-3 player_div draggable' name='player,RD,'><label>RD</label></div>
+              <img title='Coach' class='col-3 player_div draggable player_img' src='images/Icehockey/player_1_1.png' name='player,,images/Icehockey/player_1_1.png'>
+              <img title='Player' class='col-3 player_div draggable player_img' src='images/Icehockey/player_2_6.png' name='player1,1,images/Icehockey/player_2_6.png'>
+              <img title='Player' class='col-3 player_div draggable player_img' src='images/Icehockey/player_3_2.png' name='player1,1,images/Icehockey/player_3_2.png'>
+              <img title='Coach' class='col-3 player_div draggable player_img' src='images/Icehockey/player_5.png' name='player1,1,images/Icehockey/player_2_1.png'>
+            </div>
+        </details>
+
+        <details>
+            <summary>Equipments</summary>
+            <img draggable="true" src="images/Icehockey/cone_6.png"    class="back_img draggable" title="Cone"   name='equipment,cone_6,1'>
+            <img draggable="true" src="images/Icehockey/cone1_6.png"   class="back_img draggable" title="Cone"   name='equipment,cone1_6,1'>
+            <img draggable="true" src="images/Icehockey/gate_6.png"    class="back_img draggable" title="Gate"   name='equipment,gate_6,1'>
+            <img draggable="true" src="images/Icehockey/gate1_6.png"   class="back_img draggable" title="Gate"   name='equipment,gate1_6,1'>
+            <img draggable="true" src="images/Icehockey/goal_6.png"    class="back_img draggable" title="Goal"   name='equipment,goal_6,1'>
+            <img draggable="true" src="images/Icehockey/goal1_6.png"   class="back_img draggable" title="Goal"   name='equipment,goal1_6,1'>
+            <img draggable="true" src="images/Icehockey/goal2_1.png"   class="back_img draggable" title="Goal"   name='equipment,goal2_1,1'>
+            <img draggable="true" src="images/Icehockey/goal3_5.png"   class="back_img draggable" title="Goal"   name='equipment,goal3_5,1'>
+            <img draggable="true" src="images/Icehockey/goal4_1.png"   class="back_img draggable" title="Goal"   name='equipment,goal4_1,1'>
+            <img draggable="true" src="images/Icehockey/ladder1_6.png" class="back_img draggable" title="Ladder" name='equipment,ladder1_6,1'>
+            <img draggable="true" src="images/Icehockey/ladder_6.png"  class="back_img draggable" title="Ladder" name='equipment,ladder_6,1'>
+            <img draggable="true" src="images/Icehockey/hoki_5.png"    class="back_img draggable" title="Korong" name='equipment,hoki_5,1'>
+            <img draggable="true" src="images/Icehockey/korong_1.png"  class="back_img draggable" title="Korong" name='equipment,korong_1,1'>
+            <img draggable="true" src="images/Icehockey/korong1_1.png" class="back_img draggable" title="Korong" name='equipment,korong1_1,1'>
+            <img draggable="true" src="images/Icehockey/korong2_1.png" class="back_img draggable" title="Korong" name='equipment,korong2_1,1'>
+            <img draggable="true" src="images/Icehockey/palank_1.png"  class="back_img draggable" title="Palank" name='equipment,palank_1,1'>
+        </details>
+
+        <details>
+            <summary>Areas</summary>
+            <img draggable="true" src="images/Icehockey/round_6.png" class="back_img draggable" title="Ellipse Area"    name='equipment,round_6,0' onclick="addEqupment('round_6', 0)">
+            <img draggable="true" src="images/Icehockey/rect_6.png"  class="back_img draggable" title="Rectangle Area"  name='equipment,rect_6,0'  onclick="addEqupment('rect_6', 0)">
+        </details>
+
+        <details>
+            <summary>Skating</summary>
+            <img draggable="true" src="images/Icehockey/move1.png"        class="back_img draggable" title="Move w.Ball"  name='link,BEZIER,pass1'>
+            <img draggable="true" src="images/Icehockey/pass_1.png"       class="back_img draggable" title="Skate"        name='link,NORMAL,pass1'>
+            <img draggable="true" src="images/Icehockey/move_ball.png"    class="back_img draggable" title="Skate w.Puck" name='link,BEZIER,move_ball1'>
+            <img draggable="true" src="images/Icehockey/move_ball.png"    class="back_img draggable" title="Skate w.Puck" name='link,NORMAL,move_ball1'>
+
+            <img draggable="true" src="images/Icehockey/back_skate.png"   class="back_img draggable" title="Skate w.Puck" name='link,BEZIER,skate1'>
+            <img draggable="true" src="images/Icehockey/back_skate.png"   class="back_img draggable" title="Skate w.Puck" name='link,NORMAL,skate1'>
+
+            <img draggable="true" src="images/Icehockey/back_puck.png"    class="back_img draggable" title="Skate w.Puck" name='link,BEZIER,puck1'>
+            <img draggable="true" src="images/Icehockey/back_puck.png"    class="back_img draggable" title="Skate w.Puck" name='link,NORMAL,puck1'>
+
+            <img draggable="true" src="images/Icehockey/lateral_move.png" class="back_img draggable" title="Skate w.Puck" name='link,BEZIER,lateral1'>
+            <img draggable="true" src="images/Icehockey/lateral_move.png" class="back_img draggable" title="Skate w.Puck" name='link,NORMAL,lateral1'>
+        </details>
+
+        <details>
+            <summary>Puck Movement</summary>
+            <img draggable="true" src="images/Icehockey/move.png"  class="back_img draggable" title="Passing" name='link,BEZIER,move1' >
+            <img draggable="true" src="images/Icehockey/move.png"  class="back_img draggable" title="Passing" name='link,NORMAL,move1' >
+            <img draggable="true" src="images/Icehockey/move2.png" class="back_img draggable" title="Shoot"   name='link,BEZIER,shoot1'>
+            <img draggable="true" src="images/Icehockey/shoot.png" class="back_img draggable" title="Shoot"   name='link,NORMAL,shoot1'>
+        </details>
+
+        <details>
+          <summary>Other Actions</summary>
+          <img draggable="true" src="images/Icehockey/arrow_1.png"     class="back_img draggable" title="Ellipse Area" name='equipment,arrow_1,1'>
+          <img draggable="true" src="images/Icehockey/boost_1.png"     class="back_img draggable" title="Ellipse Area" name='equipment,boost_1,1'>
+          <img draggable="true" src="images/Icehockey/drop_pass_1.png" class="back_img draggable" title="Ellipse Area" name='equipment,drop_pass_1,1'>
+          <img draggable="true" src="images/Icehockey/interface_1.png" class="back_img draggable" title="Ellipse Area" name='equipment,interface_1,1'>
+          <img draggable="true" src="images/Icehockey/stop_1.png"      class="back_img draggable" title="Ellipse Area" name='equipment,stop_1,1'>
+        </details>
+
+        <details>
+          <summary>Other Objects</summary>
+          <img src="images/Icehockey/hand_write.png" class="back_img" title="Ellipse Area" onclick="addFreehand()">
+          <img draggable="true" src="images/Icehockey/text.png" class="back_img draggable" name='text' title="Ellipse Area">
+        </details>
+
+      </div>
+
+    </div>
+     
+    <div style='width:100%; padding-left:275px; display: block;'>
+      <div id="myDiagramDiv" style="border: solid 1px black;"></div>
+    </div>
+  </body>
+
+</html>
